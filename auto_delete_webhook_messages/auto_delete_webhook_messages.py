@@ -18,7 +18,9 @@ async def on_message(message: discord.Message):
         return
     if message.embeds and message.embeds[0].title:
         title = message.embeds[0].title
-        if title.startswith("[modmail] None on") or ('[modmail] Python' in title and 'success on' in title):
+        if title.startswith("[modmail] None on") or (('[modmail] Python' in title or
+                                                      '[modmail] GitHub Actions checks' in title)
+                                                     and 'success on' in title):
             await message.delete()
 
 
