@@ -16,8 +16,10 @@ WEBHOOK_ID = 515468206224441364
 async def on_message(message: discord.Message):
     if message.channel.id != CHANNEL_ID or message.webhook_id != WEBHOOK_ID:
         return
-    if message.embeds and message.embeds[0].title and message.embeds[0].title.startswith("[modmail] None on"):
-        await message.delete()
+    if message.embeds and message.embeds[0].title:
+        title = message.embeds[0].title
+        if title.startswith("[modmail] None on") or ('[modmail]' in title and 'success on' in title):
+            await message.delete()
 
 
 async def setup(bot: Bot):
