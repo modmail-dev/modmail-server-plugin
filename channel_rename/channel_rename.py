@@ -10,7 +10,10 @@ logger = getLogger(__name__)
 
 
 class ChannelRename(commands.Cog):
-    """Simple Plugin with one command—rename a thread channel."""
+    """Plugin to rename a thread channel."""
+
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.command()
     @checks.has_permissions(PermissionLevel.MODERATOR)
@@ -28,6 +31,27 @@ class ChannelRename(commands.Cog):
         else:
             await ctx.reply(f"Channel renamed to `{name}`")
 
+    @commands.command()
+    @checks.has_permissions(PermissionLevel.MODERATOR)
+    @checks.thread_only()
+    async def resetname(self, ctx):
+        """
+        Reset the channel name back to the user's username.
+        """
+        name = self.bot.format_channel_name(ctx.thread.recipient)
+        try:
+            await ctx.channel.edit(name=name)
+        except discord.Forbidden:
+            await ctx.reply("I do not have permission to edit channels.")
+        except discord.HTTPException as e:
+            if "Contains words not allowed" in e.text:
+                name = self.bot.format_channel_name(ctx.recipient, force_null=True)
+                await ctx.channel.edit(name=name)
+            else:
+                await ctx.reply("Failed to reset the channel name. Try the rename command instead.")
+        else:
+            await ctx.reply(f"Channel renamed to `{name}`")
+
 
 async def setup(bot):
-    await bot.add_cog(ChannelRename())
+    await bot.add_cog(ChannelRename(bot))
