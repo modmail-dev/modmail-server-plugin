@@ -26,9 +26,10 @@ class GiveRole(commands.Cog):
         recipients = ctx.thread.recipients
         try:
             for recipient in recipients:
-                await recipient.add_roles(role, reason=f"Role given by {ctx.author} in thread {ctx.thread}")
+                await ctx.guild.get_member(recipient.id).add_roles(role, reason=f"Role given by {ctx.author} in thread {ctx.thread}")
         except Exception as e:
             await ctx.send(f"Error giving role: {e}")
+            return
         await ctx.send(f"{role.name} given to {human_join([r.name for r in recipients])}.")
 
 
