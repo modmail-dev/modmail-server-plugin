@@ -16,7 +16,7 @@ class GiveRole(commands.Cog):
     @commands.command()
     @checks.has_permissions(PermissionLevel.ADMINISTRATOR)
     @checks.thread_only()
-    async def giverole(self, ctx, role: discord.Role):
+    async def giverole(self, ctx, *, role: discord.Role):
         """
         Gives the thread recipient a role. DANGEROUS COMMAND: see description.
 
