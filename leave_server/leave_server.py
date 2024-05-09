@@ -5,13 +5,12 @@ from discord.ext import commands
 
 from core import checks
 from core.models import PermissionLevel, getLogger
-from core.utils import human_join
 
 logger = getLogger(__name__)
 
 
-class GiveRole(commands.Cog):
-    """A plugin that gives the thread recipient a role."""
+class LeaveServer(commands.Cog):
+    """A plugin that makes the bot leave a server."""
 
 
     @commands.command()
@@ -42,4 +41,4 @@ class GiveRole(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(GiveRole())
+    await bot.add_cog(LeaveServer())
