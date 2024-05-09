@@ -21,7 +21,7 @@ class LeaveServer(commands.Cog):
         This command shows you all the servers and their IDs that your bot is in.
         """
         await ctx.reply(discord.utils.escape_markdown(discord.utils.escape_mentions(
-            "\n".join([f"{i}. {s} ({s.id}" for i, s in enumerate(ctx.bot.guilds, start=1)])
+            "\n".join([f"{i}. {s} ({s.id})" for i, s in enumerate(ctx.bot.guilds, start=1)])
         )))
 
     @commands.command()
