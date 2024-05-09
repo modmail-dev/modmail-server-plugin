@@ -15,7 +15,6 @@ class LeaveServer(commands.Cog):
 
     @commands.command()
     @checks.has_permissions(PermissionLevel.OWNER)
-    @checks.thread_only()
     async def findallservers(self, ctx):
         """
         This command shows you all the servers and their IDs that your bot is in.
@@ -26,7 +25,6 @@ class LeaveServer(commands.Cog):
 
     @commands.command()
     @checks.has_permissions(PermissionLevel.OWNER)
-    @checks.thread_only()
     async def leaveserver(self, ctx, *, guild: discord.Guild):
         """
         Leaves the specified server. Use `{prefix}findallservers` to find all the servers your bot is in.
