@@ -20,7 +20,7 @@ class LeaveServer(commands.Cog):
         """
         This command shows you all the servers and their IDs that your bot is in.
         """
-        await ctx.reply(discord.utils.escape_markdown(discord.utils.escape_mention(
+        await ctx.reply(discord.utils.escape_markdown(discord.utils.escape_mentions(
             "\n".join([f"{i}. {s} ({s.id}" for i, s in enumerate(ctx.bot.guilds, start=1)])
         )))
 
@@ -31,7 +31,7 @@ class LeaveServer(commands.Cog):
         """
         Leaves the specified server. Use `{prefix}findallservers` to find all the servers your bot is in.
         """
-        name = discord.utils.escape_markdown(discord.utils.escape_mention(str(guild)))
+        name = discord.utils.escape_markdown(discord.utils.escape_mentions(str(guild)))
         try:
             await guild.leave()
         except Exception:
