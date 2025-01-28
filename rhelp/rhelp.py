@@ -10,6 +10,11 @@ from bot import ModmailBot
 
 
 class Rhelp(commands.Cog):
+
+    """Plugin to send command or config help dialogs to a thread recipient.
+    
+    Created by Martin B <@618805150756110336>"""
+
     def __init__(self, bot: ModmailBot):
         self.bot = bot
 
@@ -17,7 +22,7 @@ class Rhelp(commands.Cog):
         self, command: Union[commands.Command, commands.Group], ctx
     ) -> Optional[discord.Embed]:
         """
-        Gets the help embed from the ModMailHelp Command.
+        Gets the help embed from the Modmail Help Command.
 
         """
         help_command = self.bot.help_command
@@ -104,7 +109,8 @@ class Rhelp(commands.Cog):
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     async def rhelp(self, ctx: commands.Context, *, command: str):
         """
-        Sendet die Hilfe für einen bestimmten Befehl an den Nutzer im aktuellen Thread.
+        ``DE:`` Sendet die Hilfe für einen bestimmten Befehl an den Nutzer im aktuellen Thread.
+        ``EN:`` Sends help for a specific command to the user in the current thread.
         """
         command = command.lower()
         embed = None
@@ -156,7 +162,8 @@ class Rhelp(commands.Cog):
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     async def arhelp(self, ctx: commands.Context, *, command: str):
         """
-        Sendet die Hilfe für einen bestimmten Befehl an den Nutzer im aktuellen Thread.
+        ``DE:`` Sendet die Hilfe für einen bestimmten Befehl an den Nutzer im aktuellen Thread.
+        ``EN:`` Sends help for a specific command to the user in the current thread.
         """
         command = command.lower()
         embed = None
