@@ -34,6 +34,23 @@ class Rhelp(commands.Cog):
 
         if isinstance(command, commands.Group):
             embed.add_field(name="Permission Level", value=perm_level, inline=False)
+            format_ = ""
+            length = len(command.commands)
+
+            for i, command in enumerate(
+                await help_command.filter_commands(command.commands, sort=True, key=lambda c: c.name)
+            ):
+                if length == i + 1:  # last
+                    branch = "└─"
+                else:
+                    branch = "├─"
+                format_ += f"`{branch} {command.name}` - {command.short_doc}\n"
+
+            embed.add_field(name="Sub Command(s)", value=format_[:1024], inline=False)
+            embed.set_footer(
+                text=f'Type "{ctx.clean_prefix}{help_command.command_attrs["name"]} command" '
+                "for more info on a command."
+            )
         elif isinstance(command, commands.Command):
             embed.set_footer(text=f"Permission level: {perm_level}")
 
@@ -91,31 +108,48 @@ class Rhelp(commands.Cog):
         """
         command = command.lower()
         embed = None
+        is_configuration = False
+
         if not command.startswith("config_"):
             bot_command = self.bot.get_command(command)
-            if not bot_command:
+            if not bot_command or (bot_command and isinstance(bot_command, commands.Cog)):
                 return await ctx.send(f"Bot Command `{command}` not found.")
+
             help_embed = await self.get_help_embed(bot_command, ctx)
             if help_embed is None:
                 return await ctx.send(
                     f"Something went wrong while generating the help embed for the command `{command}`."
                 )
-            help_embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar.url)
+            help_embed.set_author(name="Command Help")
             embed = help_embed
         else:
-
+            is_configuration = True
             config_embed = await self.get_config_embed(command)
             if not config_embed:
-                return await ctx.send(f"Configuration key `{command.split('_config')[1]}` not found.")
-            config_embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar.url)
+                return await ctx.send(
+                    f"Configuration key `{command.split('config_')[1]}` not found or failed to create the embed."
+                )
+            config_embed.set_author(name="Configuration Option Help")
             embed = config_embed
 
         if embed:
+            help_type = "configuration option help" if is_configuration else "command help"
+            target_command = command.split("config_")[1] if is_configuration else command
+
             try:
+                ctx.message.content = (
+                    f"Please read below, there you will find the {help_type} for `{target_command}`:"
+                )
+                await ctx.thread.reply(ctx.message)
                 await ctx.thread.recipient.send(embed=embed)
-                await ctx.send(f"Command help for `{command}` sent to the user.")
+                await ctx.send(
+                    f"{help_type.capitalize()} for `{target_command}` sent to the user.",
+                    delete_after=10,
+                )
+                if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
+                    await ctx.message.delete(delay=15)
             except Exception:
-                await ctx.send(f"The command help could not get sent to the user.")
+                await ctx.send(f"Something failed during sending the {help_type} anonymously to the user.")
 
     @commands.command(name="arhelp")
     @checks.thread_only()
@@ -126,37 +160,45 @@ class Rhelp(commands.Cog):
         """
         command = command.lower()
         embed = None
+        is_configuration = False
+
         if not command.startswith("config_"):
             bot_command = self.bot.get_command(command)
-            if not bot_command:
+            if not bot_command or (bot_command and isinstance(bot_command, commands.Cog)):
                 return await ctx.send(f"Bot Command `{command}` not found.")
             help_embed = await self.get_help_embed(bot_command, ctx)
             if help_embed is None:
                 return await ctx.send(
                     f"Something went wrong while generating the help embed for the command `{command}`."
                 )
-            help_embed.set_author(
-                name="Modmail Support Agent",
-                icon_url="https://discordapp.com/assets/f78426a064bc9dd24847519259bc42af.png",
-            )
+            help_embed.set_author(name="Command Help")
             embed = help_embed
         else:
-
+            is_configuration = True
             config_embed = await self.get_config_embed(command)
             if not config_embed:
-                return await ctx.send(f"Configuration key `{command.split('_config')[1]}` not found.")
-            config_embed.set_author(
-                name="Modmail Support Agent",
-                icon_url="https://discordapp.com/assets/f78426a064bc9dd24847519259bc42af.png",
-            )
+                return await ctx.send(f"Configuration key `{command.split('config_')[1]}` not found.")
+            config_embed.set_author(name="Configuration Option Help")
             embed = config_embed
 
         if embed:
+            help_type = "configuration option help" if is_configuration else "command help"
+            target_command = command.split("config_")[1] if is_configuration else command
+
             try:
+                ctx.message.content = (
+                    f"Please read below, there you will find the {help_type} for `{target_command}`:"
+                )
+                await ctx.thread.reply(ctx.message, anonymous=True)
                 await ctx.thread.recipient.send(embed=embed)
-                await ctx.send(f"Command help for `{command}` sent to the user.")
+                await ctx.send(
+                    f"{help_type.capitalize()} for `{target_command}` sent anonymously to the user.",
+                    delete_after=10,
+                )
+                if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
+                    await ctx.message.delete(delay=15)
             except Exception:
-                await ctx.send(f"The command help could not get sent to the user.")
+                await ctx.send(f"Something failed during sending the {help_type} anonymously to the user.")
 
 
 async def setup(bot: commands.Bot):
