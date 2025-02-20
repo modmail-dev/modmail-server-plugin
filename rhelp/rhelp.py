@@ -29,6 +29,8 @@ class Rhelp(commands.Cog):
 
         help_command.context = ctx
         help_command.context.bot = self.bot
+        verified_checks_previous = help_command.verify_checks
+        help_command.verify_checks = False
 
         result = await help_command._get_help_embed(command)
 
@@ -59,6 +61,7 @@ class Rhelp(commands.Cog):
         elif isinstance(command, commands.Command):
             embed.set_footer(text=f"Permission level: {perm_level}")
 
+        help_command.verify_checks = verified_checks_previous
         return embed
 
     async def get_config_embed(self, command) -> Optional[discord.Embed]:
