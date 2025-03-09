@@ -6,9 +6,7 @@ from core.models import PermissionLevel
 
 
 class EmbedRaw(commands.Cog):
-"""Simple Plugin to print embeded text with copyable Markdown.
-
-Credit to [matrix2113](https://github.com/matrix2113) on GitHub."""
+    """Simple Plugin to print embeded text with copyable Markdown. Credit to [matrix2113](https://github.com/matrix2113) on GitHub."""
     def __init__(self, bot):
         self.bot = bot
 
