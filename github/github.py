@@ -36,6 +36,8 @@ class GithubPlugin(commands.Cog):
             repo = "modmail-dev/modmail"
         elif repo == "logviewer":
             repo = "modmail-dev/logviewer"
+        elif repo == "docs":
+            repo = "modmail-dev/modmail-docs"
 
         # Try fetching the pull request (PR) or issue data
         async with self.bot.session.get(
