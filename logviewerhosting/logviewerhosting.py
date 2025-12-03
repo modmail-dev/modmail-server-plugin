@@ -52,7 +52,7 @@ class LogviewerHosting(commands.Cog):
             return
 
         all_users_active_instances = await instances_collection.find(
-            {"owner": str(1130886272550981662), "active": True},
+            {"owner": str(thread.recipient.id), "active": True},
             {"mongo_uri": 0},  # Mongo_uri should not be requested and stored in memory
         ).to_list()
         if all_users_active_instances:
