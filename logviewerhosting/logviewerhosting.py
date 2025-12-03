@@ -61,7 +61,7 @@ class LogviewerHosting(commands.Cog):
             user_subdomains = []
             for instance in all_users_active_instances:
                 created_at = format_dt(instance["created_at"], "R")
-                user_subdomains.append(f"- https://{instance["name"]}.{log_domain}/ (created {created_at})")
+                user_subdomains.append(f"- https://{instance['name']}.{log_domain}/ (created {created_at})")
 
             fmt = "\n".join(user_subdomains)
 
